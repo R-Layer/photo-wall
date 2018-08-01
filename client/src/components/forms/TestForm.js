@@ -2,19 +2,173 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { submitImageAction } from "../../redux/actions/userActions";
 class TestForm extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      imageName: "",
+      tagline: "",
+      previewURL: ""
+    };
+  }
+
   onSubmit = e => {
     e.preventDefault();
+
+    let imageStatus = {
+      name: this.state.imageName,
+      tagline: this.state.tagline
+    };
+
     let data = new FormData();
-    data.append("pin", e.target.inputFile.files[0]);
+    data.append("photo", e.target.inputFile.files[0]);
+    data.append("photoStatus", JSON.stringify(imageStatus));
     this.props.submitImage(data);
   };
 
+  onChange = e => {
+    this.setState({ [e.target.name]: e.target.value });
+  };
+
+  onSelect = e => {
+    // credits to:  cnlevy [STACK OVERFLOW]
+    const prevURL = URL.createObjectURL(e.target.files[0]);
+    //Suggest the original image name as actual
+    this.setState({
+      previewURL: prevURL,
+      imageName: e.target.files[0].name
+    });
+    console.log(e.target.files[0]);
+  };
+
+  onLoad = e => {
+    // Credits to: Jason J. Nathan [STACK OVERFLOW]
+    // Set the MIN dimension to 100 saving the ratio
+    const { width, height } = e.target;
+    const maxVal = 100;
+    let ratio = Math.max(maxVal / width, maxVal / height);
+    e.target.width = width * ratio;
+    e.target.height = height * ratio;
+  };
+
   render() {
+    const { authState, errors } = this.props;
+    let spreadErr = {};
+    if (errors.isJoi) {
+      errors.details.map(err => {
+        return spreadErr.hasOwnProperty(err.context.key)
+          ? spreadErr[err.context.key].push(err.message.replace(/"/g, ""))
+          : (spreadErr[err.context.key] = [err.message.replace(/"/g, "")]);
+      });
+    }
     return (
-      <form onSubmit={this.onSubmit}>
-        <input type="file" name="inputFile" />
-        <button type="submit">Submit it</button>
-      </form>
+      <div className="CST_fullHeight ">
+        {authState.message &&
+          !errors.message && (
+            <div className="notification is-success has-text-centered CST_frame">
+              {authState.message}
+            </div>
+          )}
+        {errors.message && (
+          <div className="notification is-danger has-text-centered CST_frame">
+            {errors.message}
+          </div>
+        )}
+        <div
+          className={`columns is-vcentered is-centered ${
+            errors.message || authState.message ? "" : "CST_fullHeight"
+          }`}
+        >
+          <div className="column is-8-desktop is-10-tablet">
+            <form className="CST_frame" onSubmit={this.onSubmit} noValidate>
+              <h1 className="title is-1 has-text-centered CST_titleThrough">
+                Post an image
+              </h1>
+              <img
+                id="photo-preview"
+                alt="preview"
+                src={this.state.previewURL}
+                onLoad={this.onLoad}
+              />
+              <div className="field">
+                <label
+                  className="label"
+                  htmlFor="photo"
+                  style={{ border: "1px solid red" }}
+                >
+                  <span className="button">Load image</span>
+                </label>
+                <div className="control">
+                  <input
+                    className={spreadErr.file ? " is-danger" : ""}
+                    type="file"
+                    name="inputFile"
+                    id="photo"
+                    onChange={this.onSelect}
+                    hidden="hidden"
+                  />
+                </div>
+                {spreadErr.file &&
+                  spreadErr.file.map(err => (
+                    <p className="help is-danger" key={err}>
+                      {err}
+                    </p>
+                  ))}
+              </div>
+              <div className="field">
+                <label className="label">Image name</label>
+                <div className="control">
+                  <input
+                    className={
+                      spreadErr.imageName ? "input is-danger" : "input"
+                    }
+                    type="text"
+                    placeholder="landscape"
+                    name="imageName"
+                    value={this.state.imageName}
+                    onChange={this.onChange}
+                  />
+                </div>
+                {spreadErr.imageName &&
+                  spreadErr.imageName.map(err => (
+                    <p className="help is-danger" key={err}>
+                      {err}
+                    </p>
+                  ))}
+              </div>
+              <div className="field">
+                <label className="label">Image tagline</label>
+                <div className="control">
+                  <input
+                    className={spreadErr.tagline ? "input is-danger" : "input"}
+                    type="text"
+                    placeholder="A winter forest landscape"
+                    name="tagline"
+                    value={this.state.tagline}
+                    onChange={this.onChange}
+                  />
+                </div>
+                {spreadErr.tagline &&
+                  spreadErr.tagline.map(err => (
+                    <p className="help is-danger" key={err}>
+                      {err}
+                    </p>
+                  ))}
+              </div>
+
+              <div className="buttons">
+                <button type="submit" className="button is-success">
+                  Create image card
+                </button>
+              </div>
+
+              <p className="has-text-centered">
+                Doesn't have an account? <br />
+                <a href="/login"> Back to login</a>
+              </p>
+            </form>
+          </div>
+        </div>
+      </div>
     );
   }
 }
@@ -32,43 +186,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(TestForm);
-
-/* 
-class FileUpload extends Component {
-  
-  handleUploadImage(ev) {
-    ev.preventDefault();
-
-    const data = new FormData();
-    data.append('file', this.uploadInput.files[0]);
-    data.append('filename', this.fileName.value);
-
-    axios.post('http://localhost:8000/upload', data)
-      .then(function (response) {
-    this.setState({ imageURL: `http://localhost:8000/${body.file}`, uploadStatus: true });
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-}
-
-   render() {
-    return(
-      <div class="container">
-        <form onSubmit={this.handleUpload}>
-          <div className="form-group">
-            <input className="form-control"  ref={(ref) => { this.uploadInput = ref; }} type="file" />
-          </div>
-
-          <div className="form-group">
-            <input className="form-control" ref={(ref) => { this.fileName = ref; }} type="text" placeholder="Optional name for the file" />
-          </div>
-
-          <button className="btn btn-success" type>Upload</button>
-
-        </form>
-      </div>
-    )
-  }
-}
-*/

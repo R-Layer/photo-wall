@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const configVars = require("./config/keys");
 const userRoutes = require("./routes/userRoutes");
-const dataRoutes = require("./routes/dataRoutes");
+const imageRoutes = require("./routes/imageRoutes");
 const port = configVars.PORT;
 
 mongoose
@@ -22,7 +22,7 @@ const app = express();
 app.use(bodyParser.json());
 
 app.use("/api/users", userRoutes);
-app.use("/api/data", dataRoutes);
+app.use("/api/image", imageRoutes);
 
 // Server static assets if in production
 if (process.env.NODE_ENV === "production") {

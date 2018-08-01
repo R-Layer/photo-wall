@@ -111,7 +111,7 @@ export const updateAction = userData => dispatch => {
 export const submitImageAction = data => dispatch => {
   const requestOptions = {
     method: "POST",
-    headers: { "content-type": "multipart/form-data" },
+    headers: {}, //{ "content-type": "multipart/form-data" },
     body: data
   };
 
@@ -119,7 +119,7 @@ export const submitImageAction = data => dispatch => {
     requestOptions.headers.authorization = localStorage.authToken;
   }
 
-  return fetch("api/data/upload", requestOptions)
+  return fetch("api/image/upload", requestOptions)
     .then(res => res.json())
     .then(uploadedImage => console.log("uploaded image", uploadedImage))
     .catch(err => console.log("err", err));
