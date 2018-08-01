@@ -1,0 +1,36 @@
+/* Dashboard general */
+.CST_fullHeight {
+  height: 100vh;
+}
+
+/* Navbar custom color */
+.navbar.is-fixed-top {
+  background-color: #99d;
+}
+
+/*Navbar custom button-like behaviour*/
+.CST_clickable {
+  cursor: pointer;
+}
+
+.CST_clickable:hover {
+  background-color: #2e63dd;
+  color: #fff;
+}
+
+.is-active .CST_clickable:hover {
+  color: #118fe4;
+  background-color: #fff;
+}
+
+/* Spaced Notification */
+.CST_frame {
+  border: 2px solid #222;
+  margin: 2rem 1rem;
+  padding: 2rem;
+}
+
+.is-danger.CST_frame,
+.is-success.CST_frame {
+  border: none;
+}
