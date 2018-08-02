@@ -107,20 +107,3 @@ export const updateAction = userData => dispatch => {
     })
     .catch(err => dispatch({ type: failProcess.ERRORS, err }));
 };
-
-export const submitImageAction = data => dispatch => {
-  const requestOptions = {
-    method: "POST",
-    headers: {}, //{ "content-type": "multipart/form-data" },
-    body: data
-  };
-
-  if (localStorage.authToken) {
-    requestOptions.headers.authorization = localStorage.authToken;
-  }
-
-  return fetch("api/image/upload", requestOptions)
-    .then(res => res.json())
-    .then(uploadedImage => console.log("uploaded image", uploadedImage))
-    .catch(err => console.log("err", err));
-};

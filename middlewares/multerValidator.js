@@ -1,4 +1,4 @@
-/* const multer = require("multer");
+const multer = require("multer");
 
 // Storage options
 const storage = multer.diskStorage({
@@ -30,36 +30,30 @@ const upload = multer({
   fileFilter: fileFilter
 }).single("photo");
 
-exports.images_create_card = (req, res) => {
+validationFile = (req, res, next) => {
   upload(req, res, err => {
-    console.log("image", req.file);
-    console.log("body", JSON.parse(req.body.photoStatus));
     if (err) {
-      return res
-        .status(422)
-        .json({
-          err: {
-            message: "Incorrect field(s)",
-            image: { message: "File size exceeded - max 2MB" }
-          }
-        });
+      return res.status(422).json({
+        err: {
+          message: "Incorrect field(s)",
+          image: { message: "File size exceeded - max 2MB" }
+        }
+      });
     } else {
       // Credits to Krzysztof Sztompka [STACK OVERFLOW]
       if (req.validationFileError) {
-        return res
-          .status(422)
-          .json({
-            err: {
-              message: "Incorrect field(s)",
-              image: { message: "Wrong file type - Only jpeg / png allowed" }
-            }
-          });
+        return res.status(422).json({
+          err: {
+            message: "Incorrect field(s)",
+            image: { message: "Wrong file type - Only jpeg / png allowed" }
+          }
+        });
+      } else {
+        req.app.locals.path = req.file.path;
+        next();
       }
-      res.status(200).json({ message: "ok" });
     }
   });
-}; */
-
-exports.images_create_card = (req, res) => {
-  res.status(200).json({ message: "ok" });
 };
+
+module.exports = validationFile;

@@ -14,3 +14,8 @@ export const failProcess = {
   ERRORS: "ERRORS",
   CLEAR: "CLEAR"
 };
+
+export const uploadProcess = {
+  REQUEST: "UPLOAD_REQUEST",
+  SUCCESS: "UPLOAD_SUCCESS"
+};

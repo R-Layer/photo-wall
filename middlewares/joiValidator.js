@@ -1,3 +1,5 @@
+const fs = require("fs");
+
 const joi = require("joi").defaults(schema =>
   schema.options({ abortEarly: false })
 );
@@ -62,6 +64,19 @@ const updateValidator = joi.object().keys({
     .options({ language: { any: { allowOnly: "must match new password" } } })
 });
 
+const uploadValidator = joi.object().keys({
+  imageStatus: joi.object().keys({
+    imageName: joi
+      .string()
+      .min(3)
+      .required(),
+    tagline: joi
+      .string()
+      .min(10)
+      .required()
+  })
+});
+
 const validator = (req, res, next) => {
   let dataToValidate;
   switch (req.url) {
@@ -74,6 +89,9 @@ const validator = (req, res, next) => {
     case "/update":
       dataToValidate = updateValidator;
       break;
+    case "/upload":
+      dataToValidate = uploadValidator;
+      break;
     default:
       dataToValidate = null;
       break;
@@ -81,6 +99,10 @@ const validator = (req, res, next) => {
 
   joi.validate(req.body, dataToValidate, (err, value) => {
     if (err) {
+      if (req.url === "/upload") {
+        fs.unlink(req.app.locals.path, () => console.log("deleted"));
+      }
+
       res.status(422).json({
         err: Object.assign({}, err, { message: "Incorrect field(s)" })
       });

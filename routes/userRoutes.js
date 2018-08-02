@@ -1,7 +1,7 @@
 const express = require("express");
 
 const authMW = require("../middlewares/auth");
-const validMW = require("../middlewares/validator");
+const validMW = require("../middlewares/joiValidator");
 
 const {
   users_get_all,

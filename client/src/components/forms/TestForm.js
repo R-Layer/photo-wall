@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { submitImageAction } from "../../redux/actions/userActions";
+import { submitImageAction } from "../../redux/actions/imageActions";
 class TestForm extends Component {
   constructor(props) {
     super(props);
@@ -15,13 +15,13 @@ class TestForm extends Component {
     e.preventDefault();
 
     let imageStatus = {
-      name: this.state.imageName,
+      imageName: this.state.imageName,
       tagline: this.state.tagline
     };
 
     let data = new FormData();
     data.append("photo", e.target.inputFile.files[0]);
-    data.append("photoStatus", JSON.stringify(imageStatus));
+    data.append("imageStatus", JSON.stringify(imageStatus));
     this.props.submitImage(data);
   };
 
@@ -90,16 +90,12 @@ class TestForm extends Component {
                 onLoad={this.onLoad}
               />
               <div className="field">
-                <label
-                  className="label"
-                  htmlFor="photo"
-                  style={{ border: "1px solid red" }}
-                >
+                <label className="label" htmlFor="photo">
                   <span className="button">Load image</span>
                 </label>
                 <div className="control">
                   <input
-                    className={spreadErr.file ? " is-danger" : ""}
+                    className={errors.image ? " is-danger" : ""}
                     type="file"
                     name="inputFile"
                     id="photo"
@@ -107,12 +103,9 @@ class TestForm extends Component {
                     hidden="hidden"
                   />
                 </div>
-                {spreadErr.file &&
-                  spreadErr.file.map(err => (
-                    <p className="help is-danger" key={err}>
-                      {err}
-                    </p>
-                  ))}
+                {errors.image && (
+                  <p className="help is-danger">{errors.image.message}</p>
+                )}
               </div>
               <div className="field">
                 <label className="label">Image name</label>
