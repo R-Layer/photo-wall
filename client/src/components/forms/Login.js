@@ -114,10 +114,6 @@ class Login extends Component {
                 Doesn't have an account? <br />
                 <a href="/register"> Register now!</a>
               </p>
-              <p className="has-text-centered">
-                Testing <br />
-                <a href="/testing"> Test</a>
-              </p>
             </form>
           </div>
         </div>

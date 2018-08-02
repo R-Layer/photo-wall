@@ -34,3 +34,8 @@
 .is-success.CST_frame {
   border: none;
 }
+
+/* capped width */
+.CST_capped {
+  width: 300px;
+}

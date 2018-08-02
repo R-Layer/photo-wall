@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { submitImageAction } from "../../redux/actions/imageActions";
-class TestForm extends Component {
+import { submitCardAction } from "../../redux/actions/cardActions";
+class ControlPanel extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -22,7 +22,7 @@ class TestForm extends Component {
     let data = new FormData();
     data.append("photo", e.target.inputFile.files[0]);
     data.append("imageStatus", JSON.stringify(imageStatus));
-    this.props.submitImage(data);
+    this.props.submitCard(data, this.props.history);
   };
 
   onChange = e => {
@@ -62,12 +62,12 @@ class TestForm extends Component {
     }
     return (
       <div className="CST_fullHeight ">
-        {authState.message &&
+        {/*         {authState.message &&
           !errors.message && (
             <div className="notification is-success has-text-centered CST_frame">
               {authState.message}
             </div>
-          )}
+          )} */}
         {errors.message && (
           <div className="notification is-danger has-text-centered CST_frame">
             {errors.message}
@@ -172,10 +172,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  submitImage: data => dispatch(submitImageAction(data))
+  submitCard: (data, history) => dispatch(submitCardAction(data, history))
 });
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(TestForm);
+)(ControlPanel);

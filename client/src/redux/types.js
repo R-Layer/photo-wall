@@ -17,5 +17,6 @@ export const failProcess = {
 
 export const uploadProcess = {
   REQUEST: "UPLOAD_REQUEST",
-  SUCCESS: "UPLOAD_SUCCESS"
+  SINGLE: "UPLOAD_SINGLE",
+  ALL: "UPLOAD_ALL"
 };

@@ -64,13 +64,13 @@ class Navbar extends React.Component {
         >
           {isAuthenticated ? (
             <div className="navbar-end">
-              {location.pathname === "/library" ? (
+              {location.pathname === "/control-panel" ? (
                 <NavLink className="navbar-item" to="/">
                   Dashboard
                 </NavLink>
               ) : (
-                <NavLink className="navbar-item" to="/library">
-                  Library
+                <NavLink className="navbar-item" to="/control-panel">
+                  Control Panel
                 </NavLink>
               )}
               <NavLink className="navbar-item" to="/settings">

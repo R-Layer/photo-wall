@@ -49,7 +49,17 @@ validationFile = (req, res, next) => {
           }
         });
       } else {
-        req.app.locals.path = req.file.path;
+        console.log("file", req.file);
+        if (req.file) {
+          req.app.locals.path = req.file.path;
+        } else {
+          return res.status(422).json({
+            err: {
+              message: "Incorrect field(s)",
+              image: { message: "No image selected" }
+            }
+          });
+        }
         next();
       }
     }

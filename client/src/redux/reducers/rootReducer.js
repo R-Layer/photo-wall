@@ -1,11 +1,11 @@
 import { combineReducers } from "redux";
 
 import { authReducer } from "./userReducer";
-import { imageReducer } from "./imageReducer";
+import { cardReducer } from "./cardReducer";
 import { errors } from "./errorReducer";
 
 export const rootReducer = combineReducers({
-  imageStatus: imageReducer,
+  cardStatus: cardReducer,
   authState: authReducer,
   errors
 });
