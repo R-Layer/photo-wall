@@ -5,7 +5,7 @@ export const cardReducer = (state = [], action) => {
     case uploadProcess.REQUEST:
       return state;
     case uploadProcess.SINGLE:
-      return [...state, action.cards];
+      return [...state, action.card];
     case uploadProcess.ALL:
       return action.cards;
     default:

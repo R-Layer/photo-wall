@@ -17,11 +17,11 @@ export const submitCardAction = (data, history) => dispatch => {
       if (uploadedCard.err) {
         return dispatch({ type: failProcess.ERRORS, err: uploadedCard.err });
       } else {
-        console.log("uploaded card", uploadedCard);
         history.push("/");
+        dispatch({ type: failProcess.CLEAR });
         return dispatch({
           type: uploadProcess.SINGLE,
-          uploadedCard
+          card: uploadedCard.newCard
         });
       }
     })
@@ -43,7 +43,6 @@ export const getCardsAction = () => dispatch => {
       if (uploadedCard.err) {
         return dispatch({ type: failProcess.ERRORS, err: uploadedCard.err });
       } else {
-        console.log("uploaded card", uploadedCard.cards);
         return dispatch({
           type: uploadProcess.ALL,
           cards: uploadedCard.cards

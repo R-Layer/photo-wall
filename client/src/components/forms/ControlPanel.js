@@ -155,8 +155,7 @@ class ControlPanel extends Component {
               </div>
 
               <p className="has-text-centered">
-                Doesn't have an account? <br />
-                <a href="/login"> Back to login</a>
+                <a href="/"> Back to the dashboard</a>
               </p>
             </form>
           </div>

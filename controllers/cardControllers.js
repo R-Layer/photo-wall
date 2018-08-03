@@ -16,12 +16,22 @@ exports.cards_get_all = (req, res) => {
 };
 
 exports.cards_create_card = (req, res) => {
-  Card.findOne({ imageName: req.body.imageStatus.imageName }).then(result => {
+  const body = JSON.parse(req.body.imageStatus);
+  Card.findOne({ imageName: body.imageName }).then(result => {
     if (result) {
-      res.status(409).json({ err: { message: "Card name already exists" } });
+      res.status(409).json({
+        err: {
+          message: "Incorrect field(s)",
+          isJoi: true,
+          details: [
+            {
+              context: { key: "imageName" },
+              message: "Image name already exists"
+            }
+          ]
+        }
+      });
     } else {
-      console.log("card", JSON.parse(req.body.imageStatus));
-      const body = JSON.parse(req.body.imageStatus);
       new Card({
         imageURL: req.app.locals.path,
         imageName: body.imageName,

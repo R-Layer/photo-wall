@@ -35,7 +35,40 @@
   border: none;
 }
 
-/* capped width */
-.CST_capped {
-  width: 300px;
+/* card */
+.CST_grid-container {
+  margin-top: 40px;
+}
+
+.CST_card img {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.CST_card {
+  position: relative;
+  cursor: pointer;
+}
+
+.CST_tooltip {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  padding: 1rem;
+
+  background-color: #111;
+  opacity: 0.8;
+
+  visibility: hidden;
+}
+
+.CST_tooltip .title,
+.CST_tooltip .subtitle {
+  color: #fff;
+}
+
+.CST_card:hover .CST_tooltip {
+  visibility: visible;
 }

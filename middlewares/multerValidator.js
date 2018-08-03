@@ -49,7 +49,6 @@ validationFile = (req, res, next) => {
           }
         });
       } else {
-        console.log("file", req.file);
         if (req.file) {
           req.app.locals.path = req.file.path;
         } else {

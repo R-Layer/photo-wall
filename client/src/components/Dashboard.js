@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 
+import StackGrid from "react-stack-grid";
 import Navbar from "./Navbar";
 
 import { connect } from "react-redux";
@@ -18,27 +19,32 @@ class Dashboard extends Component {
     this.props.getCards(this.props.history);
   }
 
+  onClick = data => {
+    console.log("target", data);
+  };
+
   render() {
     const { auth, cards, logout } = this.props;
-    console.log("cards", cards);
     const cardEls = cards.map(card => (
-      <div className="card CST_capped" key={card.imageName}>
-        <div className="card-image">
-          <figure className="image">
-            <img src={card.imageURL} alt="Placeholder" />
-          </figure>
-        </div>
-        <div className="card-content">
-          <p className="title is-4">{card.imageName}</p>
-          <p className="subtitle is-6">{card.imageTagline}</p>
-        </div>
-      </div>
+      <figure
+        className="CST_card"
+        key={card._id}
+        onClick={() => this.onClick(card)}
+      >
+        <img src={card.imageURL} alt="Placeholder" className="CST_raw" />
+        <figcaption className="CST_tooltip">
+          <h4 className="title is-4">{card.imageName}</h4>
+          <h6 className="subtitle is-6">{card.imageTagline}</h6>
+        </figcaption>
+      </figure>
     ));
 
     return (
       <div>
         <Navbar isAuthenticated={auth.isAuthenticated} logout={logout} />
-        {cardEls}
+        <StackGrid columnWidth={250} className="CST_grid-container">
+          {cardEls}
+        </StackGrid>
       </div>
     );
   }
