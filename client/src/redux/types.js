@@ -25,3 +25,8 @@ export const destroyCardProcess = {
   REQUEST: "DESTROY_REQUEST",
   SUCCESS: "DESTROY_SUCCESS"
 };
+
+export const updateCardProcess = {
+  REQUEST: "UPDATE_CARD_REQUEST",
+  SUCCESS: "UPDATE_CARD_SUCCESS"
+};

@@ -1,53 +1,65 @@
 import React, { Component } from "react";
 
 import StackGrid from "react-stack-grid";
+import EditCard from "./forms/EditCard";
+import Card from "./Card";
 import Navbar from "./Navbar";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import { getCardsAction, removeCardAction } from "../redux/actions/cardActions";
+import {
+  getCardsAction,
+  removeCardAction,
+  updateCardAction
+} from "../redux/actions/cardActions";
 import { logoutAction } from "../redux/actions/userActions";
 
 class Dashboard extends Component {
-  componentDidMount() {
-    this.props.getCards(this.props.history);
+  constructor(props) {
+    super(props);
+    this.state = {
+      editing: false,
+      activeCard: {}
+    };
   }
 
-  onClick = data => {
-    console.log("target", data);
+  onEdit = e => {
+    let activeCard = this.props.cards.filter(
+      card => card._id === e.target.closest(".CST_card").id
+    )[0];
+    this.setState({
+      editing: true,
+      activeCard
+    });
   };
+
+  onClose = () => {
+    this.setState({
+      editing: false,
+      activeCard: {}
+    });
+  };
+
+  componentDidMount() {
+    this.props.getCards();
+  }
 
   handleRemove = id => {
-    this.props.deleteCard(id).then(this.props.getCards(this.props.history));
+    this.props.deleteCard(id);
   };
 
-  handleEdit = id => {
-    console.log(id);
-  };
+  handleEdit = (id, data) => this.props.updateCard(id, data);
 
   render() {
-    const { auth, cards, logout } = this.props;
+    const { auth, cards, errors, logout } = this.props;
     const cardEls = cards.map(card => (
-      <figure
-        className="CST_card"
+      <Card
         key={card._id}
-        onClick={() => this.onClick(card)}
-      >
-        <img src={card.imageURL} alt="Placeholder" className="CST_raw" />
-        <figcaption className="CST_tooltip">
-          <h4 className="title is-4">{card.imageName}</h4>
-          <h6 className="subtitle is-6">{card.imageTagline}</h6>
-          <footer>
-            <span className="icon" onClick={() => this.handleRemove(card._id)}>
-              <i className="fas fa-trash" />
-            </span>
-            <span className="icon" onClick={() => this.handleEdit(card._id)}>
-              <i className="fas fa-pencil-alt" />
-            </span>
-          </footer>
-        </figcaption>
-      </figure>
+        card={card}
+        onRemove={() => this.handleRemove(card._id)}
+        onEdit={this.onEdit}
+      />
     ));
 
     return (
@@ -56,6 +68,13 @@ class Dashboard extends Component {
         <StackGrid columnWidth={250} className="CST_grid-container">
           {cardEls}
         </StackGrid>
+        <EditCard
+          card={this.state.activeCard}
+          errors={errors}
+          toUpdate={this.handleEdit}
+          visible={this.state.editing}
+          onClose={this.onClose}
+        />
       </div>
     );
   }
@@ -67,6 +86,7 @@ Dashboard.propTypes = {
   cards: PropTypes.array.isRequired,
   getCards: PropTypes.func.isRequired,
   deleteCard: PropTypes.func.isRequired,
+  updateCard: PropTypes.func.isRequired,
   logout: PropTypes.func.isRequired
 };
 
@@ -79,6 +99,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   logout: () => dispatch(logoutAction()),
   getCards: history => dispatch(getCardsAction(history)),
+  updateCard: (id, data) => dispatch(updateCardAction(id, data)),
   deleteCard: id => dispatch(removeCardAction(id))
 });
 

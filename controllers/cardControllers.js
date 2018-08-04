@@ -36,7 +36,7 @@ exports.cards_create_card = (req, res) => {
         owner: req.app.locals.userAuth.id,
         imageURL: req.app.locals.path,
         imageName: body.imageName,
-        imageTagline: body.tagline
+        imageTagline: body.imageTagline
       })
         .save()
         .then(newCard =>
@@ -56,6 +56,30 @@ exports.cards_delete_card = (req, res) => {
         .then(result => {
           if (result) {
             res.status(200).json({ message: "Card deleted correctly", result });
+          } else {
+            res.status(404).json({ err: { message: "Card not found" } });
+          }
+        })
+        .catch(err => res.status(500).json(err));
+    } else {
+      res.status(401).json({ err: { message: "Access denied" } });
+    }
+  });
+};
+
+exports.cards_update_card = (req, res) => {
+  Card.findById(req.params.id).then(card => {
+    if (card.owner.toString() === req.app.locals.userAuth.id) {
+      Card.findByIdAndUpdate(
+        req.params.id,
+        { $set: req.body },
+        { new: true, runValidators: true }
+      )
+        .then(updatedCard => {
+          if (updatedCard) {
+            res
+              .status(200)
+              .json({ message: "Card updated successfully", updatedCard });
           } else {
             res.status(404).json({ err: { message: "Card not found" } });
           }

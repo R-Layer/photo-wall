@@ -1,4 +1,9 @@
-import { uploadProcess, destroyCardProcess, failProcess } from "../types";
+import {
+  uploadProcess,
+  destroyCardProcess,
+  updateCardProcess,
+  failProcess
+} from "../types";
 
 export const submitCardAction = (data, history) => dispatch => {
   const requestOptions = {
@@ -25,10 +30,7 @@ export const submitCardAction = (data, history) => dispatch => {
         });
       }
     })
-    .catch(err => {
-      console.log("err", err);
-      return dispatch({ type: failProcess.ERRORS, err });
-    });
+    .catch(err => dispatch({ type: failProcess.ERRORS, err }));
 };
 
 export const getCardsAction = () => dispatch => {
@@ -70,6 +72,33 @@ export const removeCardAction = id => dispatch => {
         return dispatch({
           type: destroyCardProcess.SUCCESS,
           removedCard: removedCard.result
+        });
+      }
+    })
+    .catch(err => dispatch({ type: failProcess.ERRORS, err }));
+};
+
+export const updateCardAction = (id, data) => dispatch => {
+  const requestOptions = {
+    method: "PATCH",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(data)
+  };
+
+  if (localStorage.authToken) {
+    requestOptions.headers.authorization = localStorage.authToken;
+  }
+
+  return fetch(`api/card/updateCard/${id}`, requestOptions)
+    .then(res => res.json())
+    .then(updatedCard => {
+      if (updatedCard.err) {
+        return dispatch({ type: failProcess.ERRORS, err: updatedCard.err });
+      } else {
+        dispatch({ type: failProcess.CLEAR });
+        return dispatch({
+          type: updateCardProcess.SUCCESS,
+          updatedCard: updatedCard.updatedCard
         });
       }
     })

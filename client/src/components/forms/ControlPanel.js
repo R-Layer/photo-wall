@@ -6,7 +6,7 @@ class ControlPanel extends Component {
     super(props);
     this.state = {
       imageName: "",
-      tagline: "",
+      imageTagline: "",
       previewURL: ""
     };
   }
@@ -16,7 +16,7 @@ class ControlPanel extends Component {
 
     let imageStatus = {
       imageName: this.state.imageName,
-      tagline: this.state.tagline
+      imageTagline: this.state.imageTagline
     };
 
     let data = new FormData();
@@ -131,16 +131,18 @@ class ControlPanel extends Component {
                 <label className="label">Image tagline</label>
                 <div className="control">
                   <input
-                    className={spreadErr.tagline ? "input is-danger" : "input"}
+                    className={
+                      spreadErr.imageTagline ? "input is-danger" : "input"
+                    }
                     type="text"
                     placeholder="A winter forest landscape"
-                    name="tagline"
-                    value={this.state.tagline}
+                    name="imageTagline"
+                    value={this.state.imageTagline}
                     onChange={this.onChange}
                   />
                 </div>
-                {spreadErr.tagline &&
-                  spreadErr.tagline.map(err => (
+                {spreadErr.imageTagline &&
+                  spreadErr.imageTagline.map(err => (
                     <p className="help is-danger" key={err}>
                       {err}
                     </p>

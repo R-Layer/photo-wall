@@ -1,5 +1,4 @@
 const fs = require("fs");
-
 const joi = require("joi").defaults(schema =>
   schema.options({ abortEarly: false })
 );
@@ -77,6 +76,17 @@ const uploadValidator = joi.object().keys({
   })
 });
 
+const updateCardValidator = joi.object().keys({
+  imageName: joi
+    .string()
+    .min(3)
+    .required(),
+  imageTagline: joi
+    .string()
+    .min(10)
+    .required()
+});
+
 const validator = (req, res, next) => {
   let dataToValidate;
   switch (req.url) {
@@ -95,6 +105,10 @@ const validator = (req, res, next) => {
     default:
       dataToValidate = null;
       break;
+  }
+
+  if (/updateCard/.test(req.url)) {
+    dataToValidate = updateCardValidator;
   }
 
   joi.validate(req.body, dataToValidate, (err, value) => {
