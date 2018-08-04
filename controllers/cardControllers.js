@@ -33,6 +33,7 @@ exports.cards_create_card = (req, res) => {
       });
     } else {
       new Card({
+        owner: req.app.locals.userAuth.id,
         imageURL: req.app.locals.path,
         imageName: body.imageName,
         imageTagline: body.tagline
@@ -44,6 +45,24 @@ exports.cards_create_card = (req, res) => {
         .catch(err =>
           res.status(500).json({ message: "Error: card creation failed", err })
         );
+    }
+  });
+};
+
+exports.cards_delete_card = (req, res) => {
+  Card.findById(req.params.id).then(card => {
+    if (card.owner.toString() === req.app.locals.userAuth.id) {
+      Card.findByIdAndRemove(req.params.id)
+        .then(result => {
+          if (result) {
+            res.status(200).json({ message: "Card deleted correctly", result });
+          } else {
+            res.status(404).json({ err: { message: "Card not found" } });
+          }
+        })
+        .catch(err => res.status(500).json(err));
+    } else {
+      res.status(401).json({ err: { message: "Access denied" } });
     }
   });
 };

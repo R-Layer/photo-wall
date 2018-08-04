@@ -1,6 +1,6 @@
-import { uploadProcess } from "../types";
+import { uploadProcess, destroyCardProcess } from "../types";
 
-export const cardReducer = (state = [], action) => {
+export const cardStatusReducer = (state = [], action) => {
   switch (action.type) {
     case uploadProcess.REQUEST:
       return state;
@@ -8,6 +8,8 @@ export const cardReducer = (state = [], action) => {
       return [...state, action.card];
     case uploadProcess.ALL:
       return action.cards;
+    case destroyCardProcess.SUCCESS:
+      return state.filter(card => card._id !== action.removedCard._id);
     default:
       return state;
   }

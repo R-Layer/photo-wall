@@ -3,6 +3,10 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const cardSchema = new Schema({
+  owner: {
+    type: Schema.Types.ObjectId,
+    ref: "User"
+  },
   imageURL: {
     type: String,
     required: true

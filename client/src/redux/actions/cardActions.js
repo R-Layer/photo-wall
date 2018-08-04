@@ -1,4 +1,4 @@
-import { uploadProcess, failProcess } from "../types";
+import { uploadProcess, destroyCardProcess, failProcess } from "../types";
 
 export const submitCardAction = (data, history) => dispatch => {
   const requestOptions = {
@@ -49,8 +49,29 @@ export const getCardsAction = () => dispatch => {
         });
       }
     })
-    .catch(err => {
-      console.log("err", err);
-      return dispatch({ type: failProcess.ERRORS, err });
-    });
+    .catch(err => dispatch({ type: failProcess.ERRORS, err }));
+};
+
+export const removeCardAction = id => dispatch => {
+  const requestOptions = {
+    method: "DELETE",
+    headers: { "content-type": "application/json" }
+  };
+
+  if (localStorage.authToken)
+    requestOptions.headers.authorization = localStorage.authToken;
+
+  return fetch(`api/card/remove/${id}`, requestOptions)
+    .then(res => res.json())
+    .then(removedCard => {
+      if (removedCard.err) {
+        return dispatch({ type: failProcess.ERRORS, err: removedCard.err });
+      } else {
+        return dispatch({
+          type: destroyCardProcess.SUCCESS,
+          removedCard: removedCard.result
+        });
+      }
+    })
+    .catch(err => dispatch({ type: failProcess.ERRORS, err }));
 };

@@ -52,10 +52,12 @@
 
 .CST_tooltip {
   position: absolute;
-  bottom: 0;
+  bottom: 6px;
   left: 0;
   right: 0;
+  border-radius: 10px;
   text-align: center;
+  overflow: auto;
   padding: 1rem;
 
   background-color: #111;

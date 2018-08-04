@@ -20,3 +20,8 @@ export const uploadProcess = {
   SINGLE: "UPLOAD_SINGLE",
   ALL: "UPLOAD_ALL"
 };
+
+export const destroyCardProcess = {
+  REQUEST: "DESTROY_REQUEST",
+  SUCCESS: "DESTROY_SUCCESS"
+};

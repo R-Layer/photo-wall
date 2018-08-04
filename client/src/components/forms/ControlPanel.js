@@ -37,7 +37,6 @@ class ControlPanel extends Component {
       previewURL: prevURL,
       imageName: e.target.files[0].name
     });
-    console.log(e.target.files[0]);
   };
 
   onLoad = e => {
