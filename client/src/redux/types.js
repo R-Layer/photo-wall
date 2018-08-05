@@ -30,3 +30,8 @@ export const updateCardProcess = {
   REQUEST: "UPDATE_CARD_REQUEST",
   SUCCESS: "UPDATE_CARD_SUCCESS"
 };
+
+export const toggleLikeProcess = {
+  REQUEST: "TOGGLE_LIKE_REQUEST",
+  SUCCESS: "TOGGLE_LIKE_SUCCESS"
+};

@@ -90,3 +90,9 @@ exports.cards_update_card = (req, res) => {
     }
   });
 };
+
+exports.cards_toggle_like = (req, res) => {
+  Card.toggleLike(req.body, req.app.locals.userAuth.id)
+    .then(el => res.status(200).json(el))
+    .catch(err => res.status(500).json(err));
+};

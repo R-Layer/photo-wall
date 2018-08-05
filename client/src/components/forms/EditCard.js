@@ -28,13 +28,9 @@ class EditCard extends Component {
       imageName: this.state.imageName,
       imageTagline: this.state.imageTagline
     };
-    this.props.toUpdate(
-      this.props.card._id,
-      data
-    ); /* .then(el => {
+    this.props.toUpdate(this.props.card._id, data).then(() => {
       if (Object.keys(this.props.errors).length === 0) return this.closeModal();
-    }); */
-    this.closeModal();
+    });
   };
 
   onChange = e => {
@@ -42,12 +38,12 @@ class EditCard extends Component {
   };
 
   closeModal = () => {
+    this.props.onClose();
     this.setState({
       active: false,
       imageName: "",
       imageTagline: ""
     });
-    this.props.onClose();
   };
 
   render() {

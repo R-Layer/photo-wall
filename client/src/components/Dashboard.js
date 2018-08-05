@@ -11,7 +11,8 @@ import PropTypes from "prop-types";
 import {
   getCardsAction,
   removeCardAction,
-  updateCardAction
+  updateCardAction,
+  toggleLikeAction
 } from "../redux/actions/cardActions";
 import { logoutAction } from "../redux/actions/userActions";
 
@@ -55,9 +56,11 @@ class Dashboard extends Component {
     const { auth, cards, errors, logout } = this.props;
     const cardEls = cards.map(card => (
       <Card
+        user={this.props.auth.user}
         key={card._id}
         card={card}
         onRemove={() => this.handleRemove(card._id)}
+        onVote={() => this.props.toggleLike(card._id)}
         onEdit={this.onEdit}
       />
     ));
@@ -100,7 +103,8 @@ const mapDispatchToProps = dispatch => ({
   logout: () => dispatch(logoutAction()),
   getCards: history => dispatch(getCardsAction(history)),
   updateCard: (id, data) => dispatch(updateCardAction(id, data)),
-  deleteCard: id => dispatch(removeCardAction(id))
+  deleteCard: id => dispatch(removeCardAction(id)),
+  toggleLike: id => dispatch(toggleLikeAction(id))
 });
 
 export default connect(

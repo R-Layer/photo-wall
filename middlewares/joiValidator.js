@@ -69,7 +69,7 @@ const uploadValidator = joi.object().keys({
       .string()
       .min(3)
       .required(),
-    tagline: joi
+    imageTagline: joi
       .string()
       .min(10)
       .required()
