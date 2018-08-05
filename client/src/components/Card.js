@@ -3,6 +3,7 @@ import React, { Component } from "react";
 class Card extends Component {
   render() {
     const { card, user } = this.props;
+
     return (
       <figure className="CST_card" id={card._id}>
         <img src={card.imageURL} alt="Placeholder" className="CST_raw" />
@@ -20,12 +21,17 @@ class Card extends Component {
             </footer>
           ) : (
             <footer>
-              <span className="icon" onClick={this.props.onVote}>
-                <i className="fas fa-heart" />
-              </span>
-              <span className="icon">
-                <i className="far fa-heart" />
-              </span>
+              {card.likesArray.includes(user.id) ? (
+                <div>
+                  <span className="icon" onClick={this.props.onVote}>
+                    <i className="fas fa-heart" />
+                  </span>
+                </div>
+              ) : (
+                <span className="icon" onClick={this.props.onVote}>
+                  <i className="far fa-heart" />
+                </span>
+              )}
             </footer>
           )}
         </figcaption>

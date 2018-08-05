@@ -31,33 +31,24 @@ cardSchema.statics.toggleLike = function toggleLike(cardId, userId) {
     .exec()
     .then(card => {
       if (card.likesArray.includes(userId)) {
-        return this.findByIdAndUpdate(cardId, {
-          $pull: { likesArray: userId }
-        });
+        return this.findByIdAndUpdate(
+          cardId,
+          {
+            $pull: { likesArray: userId }
+          },
+          { new: true }
+        );
       } else {
-        return this.findByIdAndUpdate(cardId, {
-          $push: { likesArray: userId }
-        });
+        return this.findByIdAndUpdate(
+          cardId,
+          {
+            $push: { likesArray: userId }
+          },
+          { new: true }
+        );
       }
     })
     .catch(err => err);
 };
 
 module.exports = mongoose.model("Card", cardSchema);
-
-/* 
-
-books_addApplicant = (bookId, userId) => {
-  Book.findByIdAndUpdate(bookId, {
-    $push: { "bookStatus.applicants": userId },
-    "bookStatus.pending": true
-  }).then(appAdd => appAdd);
-};
-
-books_removeApplicant = (bookId, userId) => {
-  Book.findByIdAndUpdate(bookId, {
-    $pull: { "bookStatus.applicants": userId }
-  }).then(appRem => appRem);
-};
-
-*/

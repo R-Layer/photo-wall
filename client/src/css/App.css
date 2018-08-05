@@ -3,6 +3,10 @@
   height: 100vh;
 }
 
+.CST_h-padded {
+  padding: 1rem 2rem;
+}
+
 /* Navbar custom color */
 .navbar.is-fixed-top {
   background-color: #99d;
@@ -36,9 +40,6 @@
 }
 
 /* card */
-.CST_grid-container {
-  margin-top: 40px;
-}
 
 .CST_card img {
   width: 100%;

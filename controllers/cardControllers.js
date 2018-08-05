@@ -15,6 +15,21 @@ exports.cards_get_all = (req, res) => {
     );
 };
 
+exports.cards_get_user_cards = (req, res) => {
+  Card.find({ owner: req.params.id })
+    .exec()
+    .then(cards => {
+      if (cards.length > 0) {
+        res.status(200).json({ message: "Cards fetched correctly", cards });
+      } else {
+        res.status(404).json({ err: { messge: "No cards found" } });
+      }
+    })
+    .catch(err =>
+      res.status(500).json({ message: "Error: card fetch failed", err })
+    );
+};
+
 exports.cards_create_card = (req, res) => {
   const body = JSON.parse(req.body.imageStatus);
   Card.findOne({ imageName: body.imageName }).then(result => {

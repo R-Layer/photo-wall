@@ -107,3 +107,25 @@ export const updateAction = userData => dispatch => {
     })
     .catch(err => dispatch({ type: failProcess.ERRORS, err }));
 };
+
+export const getUserAction = name => dispatch => {
+  const requestOptions = {
+    method: "GET",
+    headers: { "content-type": "application/json" }
+  };
+
+  if (localStorage.authToken) {
+    requestOptions.headers.authorization = localStorage.authToken;
+  }
+
+  return fetch(`/api/users/${name}`, requestOptions)
+    .then(res => res.json())
+    .then(user => {
+      if (user.err) {
+        return dispatch({ type: failProcess.ERRORS, err: user.err });
+      } else {
+        return user.user;
+      }
+    })
+    .catch(err => dispatch({ type: failProcess.ERRORS, err }));
+};

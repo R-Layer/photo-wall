@@ -14,16 +14,34 @@ import {
   updateCardAction,
   toggleLikeAction
 } from "../redux/actions/cardActions";
-import { logoutAction } from "../redux/actions/userActions";
+import { getUserAction, logoutAction } from "../redux/actions/userActions";
 
 class Dashboard extends Component {
   constructor(props) {
     super(props);
     this.state = {
       editing: false,
-      activeCard: {}
+      activeCard: {},
+      activeUser: ""
     };
   }
+
+  componentDidMount() {
+    this.props.getCards(this.props.auth.user.id);
+  }
+
+  onChange = e => {
+    this.setState({
+      [e.target.name]: e.target.value
+    });
+  };
+
+  onSubmit = e => {
+    e.preventDefault();
+    this.props
+      .getUser(this.state.activeUser)
+      .then(el => this.props.getCards(el._id));
+  };
 
   onEdit = e => {
     let activeCard = this.props.cards.filter(
@@ -41,10 +59,6 @@ class Dashboard extends Component {
       activeCard: {}
     });
   };
-
-  componentDidMount() {
-    this.props.getCards();
-  }
 
   handleRemove = id => {
     this.props.deleteCard(id);
@@ -68,9 +82,28 @@ class Dashboard extends Component {
     return (
       <div>
         <Navbar isAuthenticated={auth.isAuthenticated} logout={logout} />
-        <StackGrid columnWidth={250} className="CST_grid-container">
-          {cardEls}
-        </StackGrid>
+        <form className="CST_h-padded" onSubmit={this.onSubmit}>
+          <div className="field has-addons">
+            <div className="control is-expanded">
+              <input
+                className="input"
+                type="text"
+                name="activeUser"
+                onChange={this.onChange}
+                value={this.state.activeUser}
+                placeholder="Find a user wall"
+              />
+            </div>
+            <div className="control">
+              <input
+                className="button is-info"
+                type="submit"
+                value="Search user"
+              />
+            </div>
+          </div>
+        </form>
+        <StackGrid columnWidth={250}>{cardEls}</StackGrid>
         <EditCard
           card={this.state.activeCard}
           errors={errors}
@@ -100,8 +133,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+  getUser: name => dispatch(getUserAction(name)),
   logout: () => dispatch(logoutAction()),
-  getCards: history => dispatch(getCardsAction(history)),
+  getCards: id => dispatch(getCardsAction(id)),
   updateCard: (id, data) => dispatch(updateCardAction(id, data)),
   deleteCard: id => dispatch(removeCardAction(id)),
   toggleLike: id => dispatch(toggleLikeAction(id))
@@ -111,3 +145,14 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(Dashboard);
+
+/* 
+
+User Story: As an unauthenticated user, I can login with GitHub.
+User Story: As an authenticated user, I can link to images.
+User Story: As an authenticated user, I can delete images that I've linked to.
+User Story: As an authenticated user, I can see a Pinterest-style wall of all the images I've linked to.
+User Story: As an unauthenticated user, I can browse other users' walls of images.
+User Story: As an authenticated user, if I upload an image that is broken, it will be replaced by a placeholder image. (can use jQuery broken image detection)
+
+*/

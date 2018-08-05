@@ -32,11 +32,8 @@ exports.users_get_one = (req, res) => {
   }
   // Credits to andyMacleod [STACK OVERFLOW]
   let rdParam =
-    idTest.toString() === req.params.id
-      ? { _id: idTest }
-      : { email: req.params.id };
-
-  User.findOne(rdParam, "username _id email")
+    idTest.toString() === req.body ? { _id: idTest } : { name: req.params.id };
+  User.findOne(rdParam)
     .exec()
     .then(user => {
       if (user) {

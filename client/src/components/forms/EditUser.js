@@ -45,7 +45,6 @@ class EditUser extends Component {
     e.preventDefault();
 
     this.props.updateUser(this.state).then(res => {
-      console.log("res", res);
       if (Object.keys(this.props.errors).length === 0) {
         this.props.history.push("/");
       }

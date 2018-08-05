@@ -2,7 +2,6 @@ import {
   uploadProcess,
   destroyCardProcess,
   updateCardProcess,
-  toggleLikeProcess,
   failProcess
 } from "../types";
 
@@ -34,13 +33,17 @@ export const submitCardAction = (data, history) => dispatch => {
     .catch(err => dispatch({ type: failProcess.ERRORS, err }));
 };
 
-export const getCardsAction = () => dispatch => {
+export const getCardsAction = id => dispatch => {
   const requestOptions = {
     method: "GET",
     headers: {}
   };
 
-  return fetch("api/card", requestOptions)
+  if (localStorage.authToken) {
+    requestOptions.headers.authorization = localStorage.authToken;
+  }
+
+  return fetch(`api/card/${id}`, requestOptions)
     .then(res => res.json())
     .then(uploadedCard => {
       if (uploadedCard.err) {
@@ -120,8 +123,10 @@ export const toggleLikeAction = cardId => dispatch => {
   return fetch("api/card/toggleLike", requestOptions)
     .then(res => res.json())
     .then(toggled => {
-      console.log("toggled", toggled);
-      dispatch({ type: toggleLikeProcess.SUCCESS, toggled });
+      dispatch({
+        type: updateCardProcess.SUCCESS,
+        updatedCard: toggled
+      });
     })
     .catch(err => dispatch({ type: failProcess.ERRORS, err }));
 };
