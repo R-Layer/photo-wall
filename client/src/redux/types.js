@@ -5,6 +5,11 @@ export const authProcess = {
   LOGOUT: "AUTH_LOGOUT"
 };
 
+export const fetchUsersProcess = {
+  REQUEST: "FETCH_USERS_REQUEST",
+  SUCCESS: "FETC_USERS_SUCCESS"
+};
+
 export const deleteProcess = {
   REQUEST: "DELETE_REQUEST",
   SUCCESS: "DELETE_SUCCESS"

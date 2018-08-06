@@ -43,9 +43,7 @@ class App extends Component {
             <Route exact path={"/login"} component={Login} />
             <Route exact path={"/register"} component={Register} />
             <Route exact path={"/control-panel"} component={ControlPanel} />
-            <Switch>
-              <PrivateRoute exact path={"/"} component={Dashboard} />
-            </Switch>
+            <Route exact path={"/"} component={Dashboard} />
             <Switch>
               <PrivateRoute exact path={"/settings"} component={EditUser} />
             </Switch>

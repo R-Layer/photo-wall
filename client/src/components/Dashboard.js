@@ -14,7 +14,11 @@ import {
   updateCardAction,
   toggleLikeAction
 } from "../redux/actions/cardActions";
-import { getUserAction, logoutAction } from "../redux/actions/userActions";
+import {
+  getUserAction,
+  getUsersAction,
+  logoutAction
+} from "../redux/actions/userActions";
 
 class Dashboard extends Component {
   constructor(props) {
@@ -27,7 +31,10 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
-    this.props.getCards(this.props.auth.user.id);
+    this.props.getUsers();
+    if (this.props.auth.isAuthenticated) {
+      this.props.getCards(this.props.auth.user.id);
+    }
   }
 
   onChange = e => {
@@ -38,9 +45,13 @@ class Dashboard extends Component {
 
   onSubmit = e => {
     e.preventDefault();
-    this.props
-      .getUser(this.state.activeUser)
-      .then(el => this.props.getCards(el._id));
+    this.props.getUser(this.state.activeUser).then(foundUser => {
+      if (foundUser.err) {
+        return;
+      } else {
+        return this.props.getCards(foundUser._id);
+      }
+    });
   };
 
   onEdit = e => {
@@ -66,8 +77,16 @@ class Dashboard extends Component {
 
   handleEdit = (id, data) => this.props.updateCard(id, data);
 
+  resetWall = () => {
+    if (this.props.auth.isAuthenticated) {
+      this.props
+        .getUser(this.props.auth.user.name)
+        .then(el => this.props.getCards(el._id));
+    }
+  };
+
   render() {
-    const { auth, cards, errors, logout } = this.props;
+    const { auth, users, cards, errors, logout } = this.props;
     const cardEls = cards.map(card => (
       <Card
         user={this.props.auth.user}
@@ -79,10 +98,25 @@ class Dashboard extends Component {
       />
     ));
 
+    const lastUsers = users.map((user, ind) => {
+      if (ind < 3) {
+        return <li key={user._id}>{user.name}</li>;
+      } else {
+        return null;
+      }
+    });
+
     return (
       <div>
-        <Navbar isAuthenticated={auth.isAuthenticated} logout={logout} />
+        <Navbar
+          isAuthenticated={auth.isAuthenticated}
+          logout={logout}
+          homeWall={this.resetWall}
+        />
         <form className="CST_h-padded" onSubmit={this.onSubmit}>
+          <div className="help">
+            <ul> Latest registered users: {lastUsers}</ul>
+          </div>
           <div className="field has-addons">
             <div className="control is-expanded">
               <input
@@ -102,7 +136,9 @@ class Dashboard extends Component {
               />
             </div>
           </div>
+          {errors && <p className="help">{errors.message}</p>}
         </form>
+        <hr />
         <StackGrid columnWidth={250}>{cardEls}</StackGrid>
         <EditCard
           card={this.state.activeCard}
@@ -128,12 +164,14 @@ Dashboard.propTypes = {
 
 const mapStateToProps = state => ({
   auth: state.authState,
+  users: state.users,
   errors: state.errors,
   cards: state.cardStatus
 });
 
 const mapDispatchToProps = dispatch => ({
   getUser: name => dispatch(getUserAction(name)),
+  getUsers: () => dispatch(getUsersAction()),
   logout: () => dispatch(logoutAction()),
   getCards: id => dispatch(getCardsAction(id)),
   updateCard: (id, data) => dispatch(updateCardAction(id, data)),
@@ -145,14 +183,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(Dashboard);
-
-/* 
-
-User Story: As an unauthenticated user, I can login with GitHub.
-User Story: As an authenticated user, I can link to images.
-User Story: As an authenticated user, I can delete images that I've linked to.
-User Story: As an authenticated user, I can see a Pinterest-style wall of all the images I've linked to.
-User Story: As an unauthenticated user, I can browse other users' walls of images.
-User Story: As an authenticated user, if I upload an image that is broken, it will be replaced by a placeholder image. (can use jQuery broken image detection)
-
-*/

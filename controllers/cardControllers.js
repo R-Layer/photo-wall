@@ -22,7 +22,7 @@ exports.cards_get_user_cards = (req, res) => {
       if (cards.length > 0) {
         res.status(200).json({ message: "Cards fetched correctly", cards });
       } else {
-        res.status(404).json({ err: { messge: "No cards found" } });
+        res.status(404).json({ err: { message: "No cards found" } });
       }
     })
     .catch(err =>

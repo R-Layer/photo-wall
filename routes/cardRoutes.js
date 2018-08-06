@@ -16,7 +16,7 @@ const {
 const router = express.Router();
 
 router.get("/", cards_get_all);
-router.get("/:id", authMW, cards_get_user_cards);
+router.get("/:id", cards_get_user_cards);
 router.post("/upload", authMW, fileValidMW, validMW, cards_create_card);
 router.delete("/remove/:id", authMW, cards_delete_card);
 router.patch("/updateCard/:id", authMW, validMW, cards_update_card);

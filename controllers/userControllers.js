@@ -7,7 +7,7 @@ const User = require("../models/userModel");
 const configVars = require("../config/keys");
 
 exports.users_get_all = (req, res) => {
-  User.find({}, "username _id email")
+  User.find({}, "name")
     .exec()
     .then(users =>
       res.status(200).json({
@@ -43,8 +43,9 @@ exports.users_get_one = (req, res) => {
         });
       } else {
         res.status(404).json({
-          message: "User not found",
-          user
+          err: {
+            message: "User not found"
+          }
         });
       }
     })

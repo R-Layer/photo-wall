@@ -1,6 +1,6 @@
 import jwt_decode from "jwt-decode";
 
-import { authProcess } from "../types";
+import { authProcess, fetchUsersProcess } from "../types";
 
 export const authReducer = (state = { isAuthenticated: false }, action) => {
   switch (action.type) {
@@ -15,6 +15,15 @@ export const authReducer = (state = { isAuthenticated: false }, action) => {
       };
     case authProcess.LOGOUT:
       return { isAuthenticated: false, message: action.message };
+    default:
+      return state;
+  }
+};
+
+export const listReducer = (state = [], action) => {
+  switch (action.type) {
+    case fetchUsersProcess.SUCCESS:
+      return action.users;
     default:
       return state;
   }

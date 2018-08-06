@@ -49,6 +49,7 @@ export const getCardsAction = id => dispatch => {
       if (uploadedCard.err) {
         return dispatch({ type: failProcess.ERRORS, err: uploadedCard.err });
       } else {
+        dispatch({ type: failProcess.CLEAR });
         return dispatch({
           type: uploadProcess.ALL,
           cards: uploadedCard.cards

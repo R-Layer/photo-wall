@@ -42,11 +42,9 @@ class Navbar extends React.Component {
     return (
       <nav className="navbar is-fixed-top" aria-label="main navigation">
         <div className="navbar-brand">
-          <NavLink className="navbar-item" to="/">
-            <span>
-              <i className="fas fa-home" />
-            </span>
-          </NavLink>
+          <span className="navbar-item" onClick={this.props.homeWall}>
+            <i className="fas fa-home" />
+          </span>
           <div
             className={isActive ? "navbar-burger is-active" : "navbar-burger"}
             data-target="navMenu"

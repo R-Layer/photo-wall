@@ -1,4 +1,9 @@
-import { deleteProcess, failProcess, authProcess } from "../types";
+import {
+  deleteProcess,
+  failProcess,
+  authProcess,
+  fetchUsersProcess
+} from "../types";
 
 export const registerAction = (userData, history) => dispatch => {
   const requestOptions = {
@@ -125,6 +130,22 @@ export const getUserAction = name => dispatch => {
         return dispatch({ type: failProcess.ERRORS, err: user.err });
       } else {
         return user.user;
+      }
+    })
+    .catch(err => dispatch({ type: failProcess.ERRORS, err }));
+};
+
+export const getUsersAction = () => dispatch => {
+  return fetch("/api/users")
+    .then(res => res.json())
+    .then(users => {
+      if (users.err) {
+        return dispatch({ type: failProcess.ERRORS, err: users.err });
+      } else {
+        return dispatch({
+          type: fetchUsersProcess.SUCCESS,
+          users: users.users
+        });
       }
     })
     .catch(err => dispatch({ type: failProcess.ERRORS, err }));
