@@ -42,7 +42,7 @@ export const loginAction = (userData, history) => dispatch => {
           err: loggedUser.err
         });
       } else {
-        localStorage.setItem("authToken", loggedUser.token);
+        localStorage.setItem("authToken", "Bearer " + loggedUser.token);
         dispatch({ type: failProcess.CLEAR });
         dispatch({ type: authProcess.LOGIN, loggedUser });
         return history.push("/");
@@ -102,7 +102,7 @@ export const updateAction = userData => dispatch => {
       if (updatedUser.err) {
         return dispatch({ type: failProcess.ERRORS, err: updatedUser.err });
       } else {
-        localStorage.setItem("authToken", updatedUser.token);
+        localStorage.setItem("authToken", "Bearer " + updatedUser.token);
         dispatch({ type: failProcess.CLEAR });
         return dispatch({
           type: authProcess.LOGIN,

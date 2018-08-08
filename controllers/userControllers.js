@@ -138,64 +138,77 @@ exports.users_delete_self = (req, res) => {
 
 exports.users_update_self = (req, res) => {
   // Update procedure, triggered only if actual credentials are valid (see below)
-  const updateProcedure = () => {
-    // New user object, needed because of rehashing password ( it is not possible to use the body request directly to update the document)
-    bcrypt.hash(req.body.newPassword, 10).then(hashed => {
-      const updatedUserData = {
+
+  const updateProcedure = updatedData => {
+    User.findByIdAndUpdate(
+      req.user._id,
+      { $set: updatedData },
+      { new: true, runValidators: true }
+    )
+      .exec()
+      .then(userUpdated => {
+        // If update is successful it's created and sent back a new token with the updated informations
+        if (userUpdated) {
+          const token = jwt.sign(
+            {
+              name: userUpdated.name,
+              id: userUpdated._id,
+              location: userUpdated.location,
+              email: userUpdated.email
+            },
+            configVars.JWT_SECRET,
+            { expiresIn: "1h" }
+          );
+          res.status(200).json({
+            message: "User updated successfully",
+            token
+          });
+        } else {
+          // this else clause shouldn't be triggered unless the token has been modified ( not valid anymore then)
+          res.status(404).json({
+            err: { message: "User not found" }
+          });
+        }
+      })
+      .catch(err => {
+        res.status(500).json({
+          message: "Error: update failed",
+          err
+        });
+      });
+  };
+
+  const updatedData = newPassword => {
+    // if newPassword is true a new user object is needed because of rehashing password ( it is not possible to use the body request directly to update the document)
+    if (newPassword) {
+      bcrypt.hash(req.body.newPassword, 10).then(hashed => {
+        let updatedUserData = {
+          name: req.body.name,
+          location: req.body.location,
+          email: req.body.email,
+          passwordHash: hashed
+        };
+        updateProcedure(updatedUserData);
+      });
+    } else {
+      let updatedUserData = {
         name: req.body.name,
         location: req.body.location,
-        email: req.body.email,
-        passwordHash: hashed
+        email: req.body.email
       };
-
-      User.findByIdAndUpdate(
-        req.app.locals.userAuth.id,
-        { $set: updatedUserData },
-        { new: true, runValidators: true }
-      )
-        .exec()
-        .then(userUpdated => {
-          // If update is successful it's created and sent back a new token with the updated informations
-          if (userUpdated) {
-            const token = jwt.sign(
-              {
-                name: userUpdated.name,
-                id: userUpdated._id,
-                location: userUpdated.location,
-                email: userUpdated.email
-              },
-              configVars.JWT_SECRET,
-              { expiresIn: "1h" }
-            );
-            res.status(200).json({
-              message: "User updated successfully",
-              token
-            });
-          } else {
-            // this else clause shouldn't be triggered unless the token has been modified ( not valid anymore then)
-            res.status(404).json({
-              err: { message: "User not found" }
-            });
-          }
-        })
-        .catch(err => {
-          res.status(500).json({
-            message: "Error: update failed",
-            err
-          });
-        });
-    });
+      updateProcedure(updatedUserData);
+    }
   };
 
   // It will check for the old password validity only if a change password is required ( the new password can't be an empty string due to validation), otherwise it will start the update procedure directly
   if (req.body.newPassword === "") {
-    updateProcedure();
+    updatedData(false);
   } else {
-    User.findById(req.app.locals.userAuth.id)
+    User.findById(req.user._id)
       .then(user => {
         bcrypt.compare(req.body.oldPassword, user.passwordHash).then(result => {
           if (result) {
-            updateProcedure();
+            updatedData(true);
           } else {
             // Created a Joi error consistent because Joi package is in charge for  the validation errors
             res.status(422).json({

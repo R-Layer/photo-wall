@@ -48,7 +48,7 @@ exports.cards_create_card = (req, res) => {
       });
     } else {
       new Card({
-        owner: req.app.locals.userAuth.id,
+        owner: req.user._id,
         imageURL: req.app.locals.path,
         imageName: body.imageName,
         imageTagline: body.imageTagline
@@ -66,7 +66,7 @@ exports.cards_create_card = (req, res) => {
 
 exports.cards_delete_card = (req, res) => {
   Card.findById(req.params.id).then(card => {
-    if (card.owner.toString() === req.app.locals.userAuth.id) {
+    if (card.owner.toString() === req.user._id.toString()) {
       Card.findByIdAndRemove(req.params.id)
         .then(result => {
           if (result) {
@@ -84,7 +84,7 @@ exports.cards_delete_card = (req, res) => {
 
 exports.cards_update_card = (req, res) => {
   Card.findById(req.params.id).then(card => {
-    if (card.owner.toString() === req.app.locals.userAuth.id) {
+    if (card.owner.toString() === req.user._id.toString()) {
       Card.findByIdAndUpdate(
         req.params.id,
         { $set: req.body },
@@ -107,7 +107,7 @@ exports.cards_update_card = (req, res) => {
 };
 
 exports.cards_toggle_like = (req, res) => {
-  Card.toggleLike(req.body, req.app.locals.userAuth.id)
+  Card.toggleLike(req.body, req.user._id)
     .then(el => res.status(200).json(el))
     .catch(err => res.status(500).json(err));
 };

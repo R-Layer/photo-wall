@@ -1,6 +1,7 @@
 const path = require("path");
 const express = require("express");
 const mongoose = require("mongoose");
+const passport = require("passport");
 const bodyParser = require("body-parser");
 const configVars = require("./config/keys");
 const userRoutes = require("./routes/userRoutes");
@@ -21,6 +22,12 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.text());
+
+//Passport init
+app.use(passport.initialize());
+
+// Passport config
+require("./config/passport")(passport);
 
 app.use("/api/users", userRoutes);
 app.use("/api/card", cardRoutes);

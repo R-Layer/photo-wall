@@ -30,11 +30,12 @@ cardSchema.statics.toggleLike = function toggleLike(cardId, userId) {
   return this.findOne({ _id: cardId })
     .exec()
     .then(card => {
-      if (card.likesArray.includes(userId)) {
+      let userIdString = userId.toString();
+      if (card.likesArray.includes(userIdString)) {
         return this.findByIdAndUpdate(
           cardId,
           {
-            $pull: { likesArray: userId }
+            $pull: { likesArray: userIdString }
           },
           { new: true }
         );
@@ -42,7 +43,7 @@ cardSchema.statics.toggleLike = function toggleLike(cardId, userId) {
         return this.findByIdAndUpdate(
           cardId,
           {
-            $push: { likesArray: userId }
+            $push: { likesArray: userIdString }
           },
           { new: true }
         );
