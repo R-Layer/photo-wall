@@ -11,7 +11,7 @@ const port = configVars.PORT;
 
 fs.mkdir("/uploads", err => {
   if (err && err.code !== "EEXIST")
-    throw new Error("Error during folder creation");
+    throw new Error("Error during folder creation", err);
 });
 
 mongoose
