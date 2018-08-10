@@ -9,13 +9,6 @@ const userRoutes = require("./routes/userRoutes");
 const cardRoutes = require("./routes/cardRoutes");
 const port = configVars.PORT;
 
-fs.mkdir("./uploads", err => {
-  if (err && err.code !== "EEXIST") {
-    console.log("errMkdir", err);
-    throw new Error(err);
-  }
-});
-
 mongoose
   .connect(
     configVars.MONGODB_URI,
