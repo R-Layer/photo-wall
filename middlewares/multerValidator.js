@@ -50,7 +50,6 @@ validationFile = (req, res, next) => {
         });
       } else {
         if (req.file) {
-          console.log("file path", req.file.path);
           req.app.locals.path = req.file.path;
         } else {
           return res.status(422).json({
