@@ -47,7 +47,7 @@ router.get(
 router.get(
   "/auth/github/callback",
   passport.authenticate("github", {
-    failureRedirect: "http://localhost:3000/login",
+    failureRedirect: "https://photo-wall-clone.herokuapp.com:3000/login",
     session: false
   }),
   (req, res) => {
@@ -65,7 +65,9 @@ router.get(
             configVars.JWT_SECRET,
             { expiresIn: "1h" }
           );
-          res.redirect("http://localhost:3000/providerLog?" + token);
+          res.redirect(
+            "https://photo-wall-clone.herokuapp.com:3000/providerLog?" + token
+          );
           /*           res.status(200).json({
             message: "Auth successful",
             token
