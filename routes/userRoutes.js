@@ -66,7 +66,7 @@ router.get(
             { expiresIn: "1h" }
           );
           res.redirect(
-            "https://photo-wall-clone.herokuapp.com:3000/providerLog?" + token
+            "https://photo-wall-clone.herokuapp.com/providerLog?" + token
           );
           /*           res.status(200).json({
             message: "Auth successful",
@@ -84,16 +84,22 @@ router.get(
               });
               newUser
                 .save()
-                .then(userCreated =>
-                  res.status(201).json({
-                    message: "User successfully created",
-                    newUser: {
+                .then(userCreated => {
+                  const token = jwt.sign(
+                    {
                       name: userCreated.name,
+                      id: userCreated._id,
                       location: userCreated.location,
                       email: userCreated.email
-                    }
-                  })
-                )
+                    },
+                    configVars.JWT_SECRET,
+                    { expiresIn: "1h" }
+                  );
+                  res.redirect(
+                    "https://photo-wall-clone.herokuapp.com/providerLog?" +
+                      token
+                  );
+                })
                 .catch((
                   err // Error during the saving
                 ) =>
