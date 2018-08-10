@@ -1,3 +1,4 @@
+const fs = require("fs");
 const path = require("path");
 const express = require("express");
 const mongoose = require("mongoose");
@@ -7,6 +8,11 @@ const configVars = require("./config/keys");
 const userRoutes = require("./routes/userRoutes");
 const cardRoutes = require("./routes/cardRoutes");
 const port = configVars.PORT;
+
+fs.mkdir("/uploads", err => {
+  if (err && err.code !== "EEXIST")
+    throw new Error("Error during folder creation");
+});
 
 mongoose
   .connect(
