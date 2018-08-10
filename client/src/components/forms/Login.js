@@ -119,7 +119,7 @@ class Login extends Component {
               </div>
               <p className="has-text-centered">
                 {/*                 <a href="http://localhost:5000/api/users/auth/github"> */}
-                <a href="https://photo-wall-clone.herokuapp.com:5000/api/users/auth/github">
+                <a href="https://photo-wall-clone.herokuapp.com/api/users/auth/github">
                   {" "}
                   Login with github
                 </a>
