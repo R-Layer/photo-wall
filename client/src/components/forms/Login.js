@@ -1,7 +1,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { loginAction, logoutAction } from "../../redux/actions/userActions";
+import {
+  loginAction,
+  githubAuth,
+  logoutAction
+} from "../../redux/actions/userActions";
 
 class Login extends Component {
   constructor(props) {
@@ -22,6 +26,10 @@ class Login extends Component {
     e.preventDefault();
 
     this.props.loginUser(this.state, this.props.history);
+  };
+
+  onGitAuth = e => {
+    this.props.gitAuth();
   };
 
   render() {
@@ -109,6 +117,12 @@ class Login extends Component {
                   Log in
                 </button>
               </div>
+              <p className="has-text-centered">
+                <a href="http://localhost:5000/api/users/auth/github">
+                  {" "}
+                  Login with github
+                </a>
+              </p>
 
               <p className="has-text-centered">
                 Doesn't have an account? <br />
@@ -135,6 +149,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   loginUser: (userData, history) => dispatch(loginAction(userData, history)),
+  gitAuth: (userData, history) => dispatch(githubAuth(userData, history)),
   logout: () => dispatch(logoutAction())
 });
 

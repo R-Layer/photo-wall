@@ -50,6 +50,13 @@ export const loginAction = (userData, history) => dispatch => {
     })
     .catch(err => dispatch({ type: failProcess.ERRORS, err }));
 };
+export const githubAuth = (userData, history) => dispatch => {
+  console.log("acting");
+  /* 
+    .then(res => res.json())
+    .then(el => console.log("el", el))
+    .catch(err => console.log("git err", err)); */
+};
 
 export const logoutAction = () => dispatch => {
   localStorage.removeItem("authToken");

@@ -17,6 +17,7 @@ import Register from "./components/forms/Register";
 import Dashboard from "./components/Dashboard";
 import EditUser from "./components/forms/EditUser";
 import ControlPanel from "./components/forms/ControlPanel";
+import ProvLog from "./components/ProvLog";
 
 import { authProcess } from "./redux/types";
 import jwt_decode from "jwt-decode";
@@ -44,6 +45,7 @@ class App extends Component {
             <Route exact path={"/register"} component={Register} />
             <Route exact path={"/control-panel"} component={ControlPanel} />
             <Route exact path={"/"} component={Dashboard} />
+            <Route exact path={"/providerLog"} component={ProvLog} />
             <Switch>
               <PrivateRoute exact path={"/settings"} component={EditUser} />
             </Switch>
