@@ -36,7 +36,7 @@ validationFile = (req, res, next) => {
       return res.status(422).json({
         err: {
           message: "Incorrect field(s)",
-          image: { message: "File size exceeded - max 2MB" }
+          image: { message: "File size exceeded - max 2MB", err }
         }
       });
     } else {
