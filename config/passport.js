@@ -30,8 +30,8 @@ module.exports = passport => {
     new GitHubStrategy(
       {
         clientID: configVars.GITHUB_CLIENT_ID,
-        clientSecret: configVars.GITHUB_CLIENT_SECRET,
-        callbackURL: "/api/users/auth/github/callback"
+        clientSecret: configVars.GITHUB_CLIENT_SECRET
+        /*         callbackURL: "/api/users/auth/github/callback" */
       },
       function(accessToken, refreshToken, profile, callback) {
         const data = {
